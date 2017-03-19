@@ -1,5 +1,9 @@
  
 import controlP5.*;
+import ddf.minim.*; 
+
+AudioPlayer player;
+Minim minim;//audio context
 
 ControlP5 cp5;
 
@@ -32,17 +36,17 @@ void setup() {
      .setSize(200,70)
      .setFont(font)
      ;
+  minim = new Minim(this);
+  player = minim.loadFile("file.mp3", 2048);
 }
 boolean isGamePlaying = false;
 void mousePressed() {
   if (mouseX>100 && mouseX < 100 + 200 && mouseY > 300 && mouseY < 300 + 70){
-      //String[] args = {"Begin"};
-      //PlayScreen playScreen = new PlayScreen();
-      //PApplet.runSketch(args, playScreen);
       backgr = loadImage("backgroundGetMoving.png");
       cp5.getController("Maybe later").remove();
       cp5.getController("Get moving!").remove();
       isGamePlaying = true;
+      player.play();
   } 
   else if (mouseX>100 && mouseX < 100 + 200 && mouseY > 400 && mouseY < 400 + 70){
     exit();
@@ -53,14 +57,19 @@ void draw() {
   background(backgr);                         // sets background
   if (isGamePlaying){
     arr.fall();
-    arr.show("arrowRightNeutral.png");
+    arr.show();
     tint(255, 127);  // Display at half opacity
-    fill(244, 66, 188, 100);
+    fill(244, 66, 188, 80);
     rect(0, 400, 400, 70);
     stroke(126);
     line(200, 0, 200, 599);
     noStroke();
   }
-  
+}
 
+void stop()
+{
+  player.close();
+  minim.stop();
+  super.stop();
 }
