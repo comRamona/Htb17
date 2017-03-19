@@ -20,55 +20,68 @@ class Arrow {
   float y = 0;
   float yspeed = 10;
   
-  /*public Arrow (int x){
+  int status = 0;
+  String direction = "down";
+  
+  public Arrow (int x, String direction){
     this.x = x; 
-  }*/
+    this.direction = direction;
+  }
   
   void fall(){
     y = y + yspeed;
   }
-  
-  void show(String pos){
-    
-    if (pos=="Left"){
-      float imageRandom = random(4);
-      if (imageRandom == 0){
-        PImage pic_move = loadImage(arrowRightNeutral);
-        image(pic_move,xL,y);
-      }
-      else if (imageRandom == 1){
-        PImage pic_move = loadImage(arrowLeftNeutral);
-        image(pic_move,xL,y);
-      }
-      else if (imageRandom == 2){
-        PImage pic_move = loadImage(arrowUpNeutral);
-        image(pic_move,xL,y);
-      }  
-      else {
-        PImage pic_move = loadImage(arrowDownNeutral);
-        image(pic_move,xL,y);
-      }
-    }
-    else {
-      float imageRandom = random(4);
-      if (imageRandom == 0){
-        PImage pic_move = loadImage(arrowRightNeutral);
-        image(pic_move,xR,y);
-      }
-      else if (imageRandom == 1){
-        PImage pic_move = loadImage(arrowLeftNeutral);
-        image(pic_move,xR,y);
-      }
-      else if (imageRandom == 2){
-        PImage pic_move = loadImage(arrowUpNeutral);
-        image(pic_move,xR,y);
-      }  
-      else {
-        PImage pic_move = loadImage(arrowDownNeutral);
-        image(pic_move,xR,y);
-      }
-    }
-    
+ 
+  void setStatus(int status){
+    this.status = status; 
   }
   
+  int getStatus (){
+    return this.status;
+  }
+  
+  float getY(){
+    return this.y;
+  }
+  
+  float getX(){
+    return this.x;
+  }
+  
+  void show(){
+    String pic = updateArrow();
+    PImage pic_move = loadImage(pic);
+    image(pic_move,x,y);
+  }
+  
+  String updateArrow(){
+    if (status == 0 && direction == "up")
+      return "arrowUpNeutral.png";
+    if (status == 0 && direction == "down")
+      return "arrowDownNeutral.png";
+    if (status == 0 && direction == "right")
+      return "arrowRightNeutral.png";
+    if (status == 0 && direction == "left")
+      return "arrowLeftNeutral.png";
+      
+    if (status == 1 && direction == "up")
+      return "arrowUpGreen.png";
+    if (status == 1 && direction == "down")
+      return "arrowDownGreen.png";
+    if (status == 1 && direction == "right")
+      return "arrowRightGreen.png";
+    if (status == 1 && direction == "left")
+      return "arrowLeftGreen.png";
+      
+    if (status == -1 && direction == "up")
+      return "arrowUpRed.png";
+    if (status == -1 && direction == "down")
+      return "arrowDownRed.png";
+    if (status == -1 && direction == "right")
+      return "arrowRightRed.png";
+    if (status == -1 && direction == "left")
+       return "arrowLeftRed.png";
+    
+    return "arrowUpNeutral.png";
+  }
 }
