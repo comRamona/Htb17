@@ -16,6 +16,22 @@ class Arrow {
     y = y + yspeed;
   }
   
+  void setStatus(int status){
+    this.status = status; 
+  }
+  
+  int getStatus (){
+    return this.status;
+  }
+  
+  float getY(){
+    return this.y;
+  }
+  
+  float getX(){
+    return this.x;
+  }
+  
   void show(){
     String pic = updateArrow();
     PImage pic_move = loadImage(pic);
