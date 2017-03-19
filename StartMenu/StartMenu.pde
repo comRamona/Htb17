@@ -39,7 +39,7 @@ void setup() {
      ;
      
    for (int i = 0; i < 100; i++){
-    arr[i] = new Arrow();  
+    arr[i] = new Arrow(55, "down");  
    }
 
   minim = new Minim(this);
