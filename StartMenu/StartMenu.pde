@@ -176,11 +176,11 @@ void updateArrows(){
           if (arr_left[i].getY() > 420 && arr_left[i].getY() < 490){
             if (arr_left[i].getDirection() == motionL){
               arr_left[i].setStatus(1);
-              score += 1;
+              score += 5;
             }
           } else if (arr_left[i].getY() > 490 && arr_left[i].getStatus() == 0){
             arr_left[i].setStatus(-1);
-            score -= 100;
+            score -= 5;
           }
         }
         
@@ -191,11 +191,11 @@ void updateArrows(){
           if (arr_right[i].getY() > 420 && arr_right[i].getY() < 490){
             if (arr_right[i].getDirection() == motionR){
               arr_right[i].setStatus(1);
-              score += 1;
+              score += 5;
             }
           } else if (arr_right[i].getY() > 490 && arr_right[i].getStatus() == 0){
               arr_right[i].setStatus(-1);
-              score -= 100;
+              score -= 5;
           } 
           //else if ( motionDirection != -1){
           //   arr_right[i].setStatus(-1); 
