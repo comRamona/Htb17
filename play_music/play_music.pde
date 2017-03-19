@@ -1,4 +1,7 @@
-import ddf.minim.*;
+# for this import to work, go to Sketch -> Import Library -> Add library..., 
+#   download and then add the 'minim' library
+import ddf.minim.*; 
+
 
 AudioPlayer player;
 Minim minim;//audio context
