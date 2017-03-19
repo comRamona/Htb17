@@ -13,7 +13,7 @@ String serialName = "/dev/cu.usbmodemFD122";
 
 ControlP5 cp5;
 
-int totalArrowCount = 40;
+int totalArrowCount = 43;
 
 Arrow[] arr_left = new Arrow[totalArrowCount];
 Arrow[] arr_right = new Arrow[totalArrowCount];
@@ -23,7 +23,7 @@ PImage backgr;
 
 boolean isGamePlaying = false;
 int musicStartDelay = 200;  //millis
-float playTime = 0;
+int playTime = 0;
 int arrowIntervalDelay = 1200;
 
 void setup() {
@@ -130,12 +130,27 @@ void getMotion(){
     break;
   }
 }
-
+int totalPlayTime = 60;
 int score = 0;
 void updateText(){
   textSize(32);
   fill(255);
   text("" + score, 10, 30); 
+  int minusTime = 0;
+  if (isGamePlaying){
+    minusTime = (int)(millis() - playTime)/1000;
+  }
+  
+  if (minusTime > 63){
+    player.close();
+    minim.stop();      
+  }
+  
+  if (minusTime > 60){
+    minusTime = 60;
+  }
+  
+  text("" + (totalPlayTime-minusTime), 350, 30);  
 }
 
 int arrowCount = 0;
@@ -158,7 +173,7 @@ void updateArrows(){
           arr_left[i].fall();
           arr_left[i].show();
           
-          if (arr_left[i].getY() > 420 && arr_left[i].getY() < 490){q
+          if (arr_left[i].getY() > 420 && arr_left[i].getY() < 490){
             if (arr_left[i].getDirection() == motionL){
               arr_left[i].setStatus(1);
               score += 1;
