@@ -17,9 +17,10 @@ int totalArrowCount = 43;
 
 Arrow[] arr_left = new Arrow[totalArrowCount];
 Arrow[] arr_right = new Arrow[totalArrowCount];
-Arrow arr;
+
 boolean mouseProssed = false;
 PImage backgr;
+color backClr = color(20, 31, 61);
 
 boolean isGamePlaying = false;
 int musicStartDelay = 200;  //millis
@@ -38,9 +39,6 @@ void setup() {
    
   backgr = loadImage("rsz_1background.png");
   cp5 = new ControlP5(this);
-  
-  arr = new Arrow(270, 0);
-  arr.setStatus(1);
   
   PFont pfont = createFont("Lucida Bright",10,true); // use true/false for smooth/no-smooth
   ControlFont font = new ControlFont(pfont,20);
@@ -61,9 +59,24 @@ void setup() {
      .setFont(font)
      ;
      
+   int prevLeftArrow = -1;
+   int prevRightArrow = -1;
    for (int i = 0; i < totalArrowCount; i++){
-    arr_left[i] = new Arrow(100, (int)random(4));  //TODO has to be random, not 0  
-    arr_right[i] = new Arrow(300, (int)random(4));  
+    int currArrow = (int)random(4);
+    while (currArrow == prevLeftArrow){
+      currArrow = (int)random(4);
+    }
+    prevLeftArrow = currArrow;
+
+    arr_left[i] = new Arrow(100, currArrow);  //TODO has to be random, not 0
+
+    currArrow = (int)random(4);
+    while (currArrow == prevRightArrow){
+      currArrow = (int)random(4);
+    }
+    prevRightArrow = currArrow;
+      
+    arr_right[i] = new Arrow(300, currArrow);  
    }
 
   minim = new Minim(this);
@@ -73,6 +86,7 @@ void setup() {
 void mousePressed() {
   if (mouseX>100 && mouseX < 100 + 200 && mouseY > 300 && mouseY < 300 + 70){
       backgr = loadImage("backgroundGetMoving.png");
+      
       cp5.getController("Maybe later").remove();
       cp5.getController("Get moving!").remove();
       isGamePlaying = true;
@@ -86,7 +100,11 @@ void mousePressed() {
 int motionR = -1;
 int motionL = -1;
 void draw() {
-  background(backgr);                         // sets background
+  if (isGamePlaying){
+    background(backClr);
+  } else {
+    background(backgr);                         // sets background
+  }
   getMotion();
   updateArrows();
   updateBackground();
@@ -102,7 +120,9 @@ void getMotion(){
   } catch (NullPointerException e){
     e.printStackTrace();
   }
-  println(motion);
+  if (motion != ""){
+    println(motion);
+  }
   switch (motion){
     case "RU":
       motionR = 1; 
@@ -128,22 +148,26 @@ void getMotion(){
     case "LL":
       motionL = 3;
     break;
+    case "S":
+      backClr = color((int)random(0, 255), (int)random(0, 255), (int)random(0, 255));
+    break;
   }
 }
 int totalPlayTime = 60;
 int score = 0;
+int minusTime = 0;
 void updateText(){
   textSize(32);
   fill(255);
   text("" + score, 10, 30); 
-  int minusTime = 0;
+  
   if (isGamePlaying){
     minusTime = (int)(millis() - playTime)/1000;
   }
   
   if (minusTime > 63){
     player.close();
-    minim.stop();      
+    minim.stop();  
   }
   
   if (minusTime > 60){
@@ -156,16 +180,21 @@ void updateText(){
 int arrowCount = 0;
 boolean isArrowsFalling = false;
 int prevArrowTime = 0;
-
+int randomOffset = 0;
 void updateArrows(){
   //Are we playing the game?
   if (isGamePlaying){
     int curr = millis();
     //should we start displaying arrows?
     if (isArrowsFalling){
-      if (curr - arrowIntervalDelay > prevArrowTime){
-        arrowCount = arrowCount < totalArrowCount ? arrowCount+1 : totalArrowCount;
+      if (curr - arrowIntervalDelay - randomOffset > prevArrowTime){
+        //arrowCount = arrowCount < totalArrowCount ? arrowCount+1 : totalArrowCount;
+        if (minusTime < 52){
+          arrowCount++;
+        }
+        
         prevArrowTime = curr;
+        randomOffset = (int) random(-100, 1000);
       }
       
       for (int i = 0; i < arrowCount; i++){
@@ -173,12 +202,12 @@ void updateArrows(){
           arr_left[i].fall();
           arr_left[i].show();
           
-          if (arr_left[i].getY() > 420 && arr_left[i].getY() < 490){
+          if (arr_left[i].getY() > 420 && arr_left[i].getY() < 500){
             if (arr_left[i].getDirection() == motionL){
               arr_left[i].setStatus(1);
               score += 5;
             }
-          } else if (arr_left[i].getY() > 490 && arr_left[i].getStatus() == 0){
+          } else if (arr_left[i].getY() > 500 && arr_left[i].getStatus() == 0){
             arr_left[i].setStatus(-1);
             score -= 5;
           }
@@ -188,12 +217,12 @@ void updateArrows(){
           arr_right[i].fall();
           arr_right[i].show();
           
-          if (arr_right[i].getY() > 420 && arr_right[i].getY() < 490){
+          if (arr_right[i].getY() > 420 && arr_right[i].getY() < 500){
             if (arr_right[i].getDirection() == motionR){
               arr_right[i].setStatus(1);
               score += 5;
             }
-          } else if (arr_right[i].getY() > 490 && arr_right[i].getStatus() == 0){
+          } else if (arr_right[i].getY() > 500 && arr_right[i].getStatus() == 0){
               arr_right[i].setStatus(-1);
               score -= 5;
           } 
@@ -217,7 +246,7 @@ void updateBackground(){
   if (isGamePlaying){
     tint(255, 127);  // Display at half opacity
     fill(244, 66, 188, 50);
-    rect(0, 400, 400, 70);
+    rect(0, 400, 400, 100);
     stroke(126);
     line(200, 0, 200, 599);
     noStroke();
