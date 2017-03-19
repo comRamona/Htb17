@@ -31,20 +31,21 @@ void setup() {
      .setSize(200,70)
      .setFont(font)
      ;
-     
-  String[] args = {"Begin"};
-  PlayScreen playScreen = new PlayScreen();
-  PApplet.runSketch(args, playScreen);
 }
 
 void mousePressed() {
-  if (mouseProssed) {
+  if (mouseX>100 && mouseX < 100 + 200 && mouseY > 300 && mouseY < 300 + 70){
+      String[] args = {"Begin"};
+      PlayScreen playScreen = new PlayScreen();
+      PApplet.runSketch(args, playScreen);
+  } 
+  else if (mouseX>100 && mouseX < 100 + 200 && mouseY > 400 && mouseY < 400 + 70){
     exit();
   }
 }
 
 void draw() {
-  PImage backgr;    
+  PImage backgr;                                 
   backgr = loadImage("rsz_1background.png");     
   background(backgr);                         // sets background
   arr.fall();
