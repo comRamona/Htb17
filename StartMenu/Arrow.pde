@@ -55,6 +55,7 @@ class Arrow {
     String pic = updateArrow();
     PImage pic_move = loadImage(pic);
     imageMode(CENTER);
+    pic_move.resize(40, 40);
     image(pic_move,x,y);
   }
   
