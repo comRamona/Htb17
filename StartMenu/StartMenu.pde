@@ -31,6 +31,10 @@ void setup() {
      .setSize(200,70)
      .setFont(font)
      ;
+     
+  String[] args = {"Begin"};
+  PlayScreen playScreen = new PlayScreen();
+  PApplet.runSketch(args, playScreen);
 }
 
 void mousePressed() {
@@ -40,7 +44,7 @@ void mousePressed() {
 }
 
 void draw() {
-  PImage backgr;                                 
+  PImage backgr;    
   backgr = loadImage("rsz_1background.png");     
   background(backgr);                         // sets background
   arr.fall();
