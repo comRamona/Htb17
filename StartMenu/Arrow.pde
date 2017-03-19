@@ -1,9 +1,12 @@
 class Arrow {
   
-  float x = 150;
+  float x = 55;
   float y = 0;
   float yspeed = 1;
   
+  public Arrow (int x){
+    this.x = x; 
+  }
   
   void fall(){
     y = y + yspeed;

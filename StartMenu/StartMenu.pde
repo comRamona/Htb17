@@ -5,13 +5,14 @@ ControlP5 cp5;
 
 Arrow arr;
 boolean mouseProssed = false;
-
+PImage backgr;      
 void setup() {
   size(400,599);
   noStroke();
+  backgr = loadImage("rsz_1background.png");
   cp5 = new ControlP5(this);
   
-  arr = new Arrow();
+  arr = new Arrow(55);
   
   PFont pfont = createFont("Lucida Bright",10,true); // use true/false for smooth/no-smooth
   ControlFont font = new ControlFont(pfont,20);
@@ -32,12 +33,16 @@ void setup() {
      .setFont(font)
      ;
 }
-
+boolean isGamePlaying = false;
 void mousePressed() {
   if (mouseX>100 && mouseX < 100 + 200 && mouseY > 300 && mouseY < 300 + 70){
-      String[] args = {"Begin"};
-      PlayScreen playScreen = new PlayScreen();
-      PApplet.runSketch(args, playScreen);
+      //String[] args = {"Begin"};
+      //PlayScreen playScreen = new PlayScreen();
+      //PApplet.runSketch(args, playScreen);
+      backgr = loadImage("backgroundGetMoving.png");
+      cp5.getController("Maybe later").remove();
+      cp5.getController("Get moving!").remove();
+      isGamePlaying = true;
   } 
   else if (mouseX>100 && mouseX < 100 + 200 && mouseY > 400 && mouseY < 400 + 70){
     exit();
@@ -45,9 +50,17 @@ void mousePressed() {
 }
 
 void draw() {
-  PImage backgr;                                 
-  backgr = loadImage("rsz_1background.png");     
   background(backgr);                         // sets background
-  arr.fall();
-  arr.show("arrowRightRed.png");
+  if (isGamePlaying){
+    arr.fall();
+    arr.show("arrowRightNeutral.png");
+    tint(255, 127);  // Display at half opacity
+    fill(244, 66, 188, 100);
+    rect(0, 400, 400, 70);
+    stroke(126);
+    line(200, 0, 200, 599);
+    noStroke();
+  }
+  
+
 }
