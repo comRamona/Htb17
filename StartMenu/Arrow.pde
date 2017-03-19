@@ -15,10 +15,9 @@ class Arrow {
   String arrowUpNeutral = "arrowUpNeutral.png";
   String arrowDownNeutral = "arrowDownNeutral.png";   
   
-  float xR = 55;
-  float xL = 345;
+  float x = 55;
   float y = 0;
-  float yspeed = 10;
+  float yspeed = 1;
   
   int status = 0;
   String direction = "down";

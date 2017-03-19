@@ -7,9 +7,11 @@ Minim minim;//audio context
 
 ControlP5 cp5;
 
-Arrow[] arr = new Arrow[100];
+Arrow[] arr_left = new Arrow[100];
+Arrow arr;
 boolean mouseProssed = false;
-PImage backgr;      
+PImage backgr;
+
 void setup() {
   size(400,599);
   noStroke();
@@ -39,7 +41,7 @@ void setup() {
      ;
      
    for (int i = 0; i < 100; i++){
-    arr[i] = new Arrow(55, "down");  
+    arr_left[i] = new Arrow(55, "down");  
    }
 
   minim = new Minim(this);
@@ -74,7 +76,12 @@ void updateArrows(){
     float m = millis();
       if (m - 2000 > currTime){
       arr.fall();
-      arr.show();    
+      arr.show();  
+      //for (int i = 0; i < 100; i++){
+        //arr_left[i].fall();
+        //arr_left[i].show();
+        //delay(1);
+      //}
     }
   }
 }
@@ -82,12 +89,12 @@ void updateArrows(){
 void updateBackground(){
   background(backgr);                         // sets background
   if (isGamePlaying){
-    for (int i = 0; i < 100; i++){
-      arr[i].fall();
-      arr[i].show("Left");
-      arr[i].show("Right");
-      //delay(1);
-    }
+    tint(255, 127);  // Display at half opacity
+    fill(244, 66, 188, 100);
+    rect(0, 400, 400, 70);
+    stroke(126);
+    line(200, 0, 200, 599);
+    noStroke();
   }
 }
 
