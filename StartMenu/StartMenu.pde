@@ -24,12 +24,18 @@ PImage backgr;
 boolean isGamePlaying = false;
 int musicStartDelay = 200;  //millis
 float playTime = 0;
-int arrowIntervalDelay = 1800;
+int arrowIntervalDelay = 1200;
 
 void setup() {
   size(400,599);
   noStroke();
-   //myPort = new Serial(this, serialName, 115200);
+  
+  try {
+    myPort = new Serial(this, serialName, 115200);
+  } catch (Exception e) {
+    e.printStackTrace();
+  }
+   
   backgr = loadImage("rsz_1background.png");
   cp5 = new ControlP5(this);
   
@@ -89,9 +95,13 @@ void draw() {
 
 void getMotion(){
   String motion = "";
-  //while (myPort.available() > 0) {
-  //  motion = myPort.readString();
-  //}
+  try{
+    while (myPort.available() > 0) {
+      motion = myPort.readString();
+    }
+  } catch (NullPointerException e){
+    e.printStackTrace();
+  }
   println(motion);
   switch (motion){
     case "RU":
@@ -148,12 +158,12 @@ void updateArrows(){
           arr_left[i].fall();
           arr_left[i].show();
           
-          if (arr_left[i].getY() > 390 && arr_left[i].getY() < 460){
+          if (arr_left[i].getY() > 420 && arr_left[i].getY() < 490){q
             if (arr_left[i].getDirection() == motionL){
               arr_left[i].setStatus(1);
               score += 1;
             }
-          } else if (arr_left[i].getY() > 450 && arr_left[i].getStatus() == 0){
+          } else if (arr_left[i].getY() > 490 && arr_left[i].getStatus() == 0){
             arr_left[i].setStatus(-1);
             score -= 100;
           }
@@ -163,12 +173,12 @@ void updateArrows(){
           arr_right[i].fall();
           arr_right[i].show();
           
-          if (arr_right[i].getY() > 390 && arr_right[i].getY() < 460){
+          if (arr_right[i].getY() > 420 && arr_right[i].getY() < 490){
             if (arr_right[i].getDirection() == motionR){
               arr_right[i].setStatus(1);
               score += 1;
             }
-          } else if (arr_right[i].getY() > 450 && arr_right[i].getStatus() == 0){
+          } else if (arr_right[i].getY() > 490 && arr_right[i].getStatus() == 0){
               arr_right[i].setStatus(-1);
               score -= 100;
           } 
@@ -184,8 +194,8 @@ void updateArrows(){
       prevArrowTime = curr;
     }
   }
-  //motionR = -1;
-  //motionL = -1;
+  motionR = -1;
+  motionL = -1;
 }
 
 void updateBackground(){
