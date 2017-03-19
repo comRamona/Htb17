@@ -22,14 +22,14 @@ boolean mouseProssed = false;
 PImage backgr;
 
 boolean isGamePlaying = false;
-int musicStartDelay = 0;  //millis
+int musicStartDelay = 200;  //millis
 float playTime = 0;
 int arrowIntervalDelay = 1800;
 
 void setup() {
   size(400,599);
   noStroke();
-   myPort = new Serial(this, serialName, 115200);
+   //myPort = new Serial(this, serialName, 115200);
   backgr = loadImage("rsz_1background.png");
   cp5 = new ControlP5(this);
   
@@ -89,9 +89,9 @@ void draw() {
 
 void getMotion(){
   String motion = "";
-  while (myPort.available() > 0) {
-    motion = myPort.readString();
-  }
+  //while (myPort.available() > 0) {
+  //  motion = myPort.readString();
+  //}
   println(motion);
   switch (motion){
     case "RU":
