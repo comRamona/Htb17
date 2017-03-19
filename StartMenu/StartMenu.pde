@@ -5,9 +5,15 @@ import ddf.minim.*;
 AudioPlayer player;
 Minim minim;//audio context
 
+import processing.serial.*;
+
+// The serial port:
+Serial myPort;       
+String serialName = "/dev/cu.usbmodemFD122";
+
 ControlP5 cp5;
 
-int totalArrowCount = 20;
+int totalArrowCount = 40;
 
 Arrow[] arr_left = new Arrow[totalArrowCount];
 Arrow[] arr_right = new Arrow[totalArrowCount];
@@ -16,13 +22,14 @@ boolean mouseProssed = false;
 PImage backgr;
 
 boolean isGamePlaying = false;
-int musicStartDelay = 900;  //millis
+int musicStartDelay = 0;  //millis
 float playTime = 0;
-int arrowIntervalDelay = 2000;
+int arrowIntervalDelay = 1800;
 
 void setup() {
   size(400,599);
   noStroke();
+   myPort = new Serial(this, serialName, 115200);
   backgr = loadImage("rsz_1background.png");
   cp5 = new ControlP5(this);
   
@@ -49,8 +56,8 @@ void setup() {
      ;
      
    for (int i = 0; i < totalArrowCount; i++){
-    arr_left[i] = new Arrow(55, (int)random(4));  //TODO has to be random, not 0  
-    arr_right[i] = new Arrow(270, (int)random(4));  
+    arr_left[i] = new Arrow(100, (int)random(4));  //TODO has to be random, not 0  
+    arr_right[i] = new Arrow(300, (int)random(4));  
    }
 
   minim = new Minim(this);
@@ -70,10 +77,55 @@ void mousePressed() {
     exit();
   }
 }
-
+int motionR = -1;
+int motionL = -1;
 void draw() {
-  updateBackground();
+  background(backgr);                         // sets background
+  getMotion();
   updateArrows();
+  updateBackground();
+  updateText();
+}
+
+void getMotion(){
+  String motion = "";
+  while (myPort.available() > 0) {
+    motion = myPort.readString();
+  }
+  println(motion);
+  switch (motion){
+    case "RU":
+      motionR = 1; 
+    break;
+    case "RD":
+      motionR = 0;
+    break;
+    case "RR":
+      motionR = 2;
+    break;
+    case "RL":
+      motionR = 3;
+    break;
+    case "LU":
+      motionL = 1; 
+    break;
+    case "LD":
+      motionL = 0;
+    break;
+    case "LR":
+      motionL = 2;
+    break;
+    case "LL":
+      motionL = 3;
+    break;
+  }
+}
+
+int score = 0;
+void updateText(){
+  textSize(32);
+  fill(255);
+  text("" + score, 10, 30); 
 }
 
 int arrowCount = 0;
@@ -96,26 +148,29 @@ void updateArrows(){
           arr_left[i].fall();
           arr_left[i].show();
           
-          if (arr_left[i].getY() > 370 && arr_left[i].getY() < 440){
-            if (arr_left[i].getDirection() == motionDirection){
+          if (arr_left[i].getY() > 390 && arr_left[i].getY() < 460){
+            if (arr_left[i].getDirection() == motionL){
               arr_left[i].setStatus(1);
+              score += 1;
             }
-          } else if (arr_left[i].getY() > 440 && arr_left[i].getStatus() == 0){
+          } else if (arr_left[i].getY() > 450 && arr_left[i].getStatus() == 0){
             arr_left[i].setStatus(-1);
+            score -= 100;
           }
         }
         
-        println (motionDirection);
         if (arr_right[i].getY() < 600){ 
           arr_right[i].fall();
           arr_right[i].show();
           
-          if (arr_right[i].getY() > 370 && arr_right[i].getY() < 440){
-            if (arr_right[i].getDirection() == motionDirection){
+          if (arr_right[i].getY() > 390 && arr_right[i].getY() < 460){
+            if (arr_right[i].getDirection() == motionR){
               arr_right[i].setStatus(1);
+              score += 1;
             }
-          } else if (arr_right[i].getY() > 440 && arr_right[i].getStatus() == 0){
+          } else if (arr_right[i].getY() > 450 && arr_right[i].getStatus() == 0){
               arr_right[i].setStatus(-1);
+              score -= 100;
           } 
           //else if ( motionDirection != -1){
           //   arr_right[i].setStatus(-1); 
@@ -129,14 +184,14 @@ void updateArrows(){
       prevArrowTime = curr;
     }
   }
-  motionDirection = -1;
+  //motionR = -1;
+  //motionL = -1;
 }
 
 void updateBackground(){
-  background(backgr);                         // sets background
   if (isGamePlaying){
     tint(255, 127);  // Display at half opacity
-    fill(244, 66, 188, 100);
+    fill(244, 66, 188, 50);
     rect(0, 400, 400, 70);
     stroke(126);
     line(200, 0, 200, 599);
@@ -144,24 +199,24 @@ void updateBackground(){
   }
 }
 
-int motionDirection = -1;
-void keyPressed() {
-  if (key == CODED) {
-    if (keyCode == UP) {
-      motionDirection = 0;
-      //arr_left[0].setStatus(1);
-    } else if (keyCode == DOWN) {
-      motionDirection = 1;
-      //arr_left[0].setStatus(-1);
-    } else if (keyCode == LEFT) {
-      motionDirection = 3;
-      //arr_left[0].setStatus(0);
-    } else if (keyCode == RIGHT) {
-      motionDirection = 2;
-      //arr_left[0].setStatus(0);
-    }
-  }
-}
+//int motionDirection = -1;
+//void keyPressed() {
+//  if (key == CODED) {
+//    if (keyCode == UP) {
+//      motionDirection = 0;
+//      //arr_left[0].setStatus(1);
+//    } else if (keyCode == DOWN) {
+//      motionDirection = 1;
+//      //arr_left[0].setStatus(-1);
+//    } else if (keyCode == LEFT) {
+//      motionDirection = 3;
+//      //arr_left[0].setStatus(0);
+//    } else if (keyCode == RIGHT) {
+//      motionDirection = 2;
+//      //arr_left[0].setStatus(0);
+//    }
+//  }
+//}
 
 void stop()
 {

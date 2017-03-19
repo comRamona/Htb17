@@ -16,7 +16,7 @@ class Arrow {
   String arrowDownNeutral = "arrowDownNeutral.png";   
   
   float x = 55;
-  float y = -100;
+  float y = -60;
   float yspeed = 1;
   
   int status = 0;
@@ -54,6 +54,7 @@ class Arrow {
   void show(){
     String pic = updateArrow();
     PImage pic_move = loadImage(pic);
+    imageMode(CENTER);
     image(pic_move,x,y);
   }
   
